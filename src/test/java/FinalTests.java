@@ -9,7 +9,7 @@ public class FinalTests extends BaseTest {
     private String textPost = "My first api post";
 
     @Test
-    public void VkTest() {
+    public void vkTest() {
         String s = new AuthPage()
                 .signIn()
                 .postOnTheWall()
@@ -17,5 +17,13 @@ public class FinalTests extends BaseTest {
                 .getTextFromPost();
 
         Assert.assertTrue(textPost.contains(s));
+    }
+
+    @Test
+    public void deletePost(){
+        new AuthPage()
+                .signIn()
+                .getIDandDeleted()
+                .goingToProfile();
     }
 }

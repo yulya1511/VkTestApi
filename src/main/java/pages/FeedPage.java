@@ -26,7 +26,7 @@ public class FeedPage {
     private String v = "v";
     private String V = "5.131";
 
-    public FeedPage getIdandDeleted() { //если захотим удалить пост, вызовем этот метод чтоб получить айди и удалить посл пост например
+    public FeedPage getIDandDeleted() {
         List<Integer> ids = given()
                 .baseUri(BASE_URI)
                 .basePath(GET)
