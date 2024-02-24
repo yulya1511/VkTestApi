@@ -12,4 +12,3 @@ public class ProfilePage {
         return waitUntilPresenceOfElementLocated(TEXT_FROM_POST).getText();
     }
 }
-

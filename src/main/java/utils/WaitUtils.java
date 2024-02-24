@@ -10,8 +10,14 @@ import java.time.Duration;
 
 public class WaitUtils {
 
+    private static WebDriverWait EXPLICIT_WAIT = null;
+
     public static WebDriverWait getExplicitWait() {
-        return new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(10));
+        if (EXPLICIT_WAIT == null) {
+            EXPLICIT_WAIT = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(10));
+            return EXPLICIT_WAIT;
+        }
+        return EXPLICIT_WAIT;
     }
 
     public static WebElement waitUntilPresenceOfElementLocated(By locator) {
