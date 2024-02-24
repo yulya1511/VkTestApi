@@ -52,7 +52,7 @@ public class FeedPage {
         return new FeedPage();
     }
 
-    public FeedPage postOnTheWall() {
+    public FeedPage postMessageOnTheWall() {
         given()
                 .baseUri(BASE_URI)
                 .basePath(POST)
@@ -70,5 +70,19 @@ public class FeedPage {
     public ProfilePage goingToProfile() {
         waitUntilPresenceOfElementLocated(By.xpath("//span[text()='My profile']")).click();
         return new ProfilePage();
+    }
+
+    public void getWallUploadServer (){
+        String s =  given()
+                .baseUri(BASE_URI)
+                .basePath("photos.getWallUploadServer?")
+                .queryParam(owner_id, OWNER_ID)
+                .queryParam(access_token, TOKEN)
+                .queryParam(v, V)
+                .contentType(ContentType.JSON)
+                .when().get()
+                .then().statusCode(SC_OK)
+                .extract().body().asString();
+        System.out.println(s);
     }
 }

@@ -12,7 +12,7 @@ public class FinalTests extends BaseTest {
     public void vkTest() {
         String s = new AuthPage()
                 .signIn()
-                .postOnTheWall()
+                .postMessageOnTheWall()
                 .goingToProfile()
                 .getTextFromPost();
 
@@ -25,5 +25,12 @@ public class FinalTests extends BaseTest {
                 .signIn()
                 .getIDandDeleted()
                 .goingToProfile();
+    }
+
+    @Test
+    public void postPictureOnTheWall(){
+        new AuthPage()
+                .signIn()
+                .getWallUploadServer();
     }
 }
