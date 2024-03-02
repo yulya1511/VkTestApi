@@ -6,8 +6,10 @@ import static utils.WaitUtils.waitUntilPresenceOfElementLocated;
 
 public class FeedPage {
 
+    private By goToProfile = By.xpath("//span[text()='My profile']");
+
     public ProfilePage goingToProfile() {
-        waitUntilPresenceOfElementLocated(By.xpath("//span[text()='My profile']")).click();
+        waitUntilPresenceOfElementLocated(goToProfile).click();
         return new ProfilePage();
     }
 }

@@ -3,21 +3,26 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.AuthPage;
 import pages.FeedPage;
+import utils.ResourceConstants;
+
+import static utils.ResourcesUtils.getResource;
 
 import java.util.List;
 
 
 public class FinalTest extends BaseTest {
 
+    WallService wallService = new WallService();
     private String textPost = "My first api post";
 
     @Test
     public void vkTest() {
         new AuthPage()
-                .signIn();
+                .signIn(getResource(ResourceConstants.TEST_DATA.getResource(), "LOGIN"),
+                        getResource(ResourceConstants.TEST_DATA.getResource(), "PASSWORD"));
 
-        new WallService()
-                .postMessageOnTheWall();
+        wallService.postMessageOnTheWall(getResource(ResourceConstants.TEST_DATA.getResource(), "MESSAGE_VALUE"),
+                getResource(ResourceConstants.TEST_DATA.getResource(), "API_VERSION"));
 
         String s = new FeedPage()
                 .goingToProfile()
@@ -29,13 +34,13 @@ public class FinalTest extends BaseTest {
     @Test
     public void deletePost() {
         new AuthPage()
-                .signIn();
+                .signIn(getResource(ResourceConstants.TEST_DATA.getResource(), "LOGIN"),
+                        getResource(ResourceConstants.TEST_DATA.getResource(), "PASSWORD"));
 
-        new WallService()
-                .postMessageOnTheWall();
+        wallService.postMessageOnTheWall(getResource(ResourceConstants.TEST_DATA.getResource(), "MESSAGE_VALUE"),
+                getResource(ResourceConstants.TEST_DATA.getResource(), "API_VERSION"));
 
-        new WallService()
-                .getIDandDeleted();
+        wallService.getIDandDeleted();
 
         new FeedPage()
                 .goingToProfile();
@@ -49,10 +54,11 @@ public class FinalTest extends BaseTest {
     @Test
     public void postPictureOnTheWallAndCheck() {
         new AuthPage()
-                .signIn();
+                .signIn(getResource(ResourceConstants.TEST_DATA.getResource(), "LOGIN"),
+                        getResource(ResourceConstants.TEST_DATA.getResource(), "PASSWORD"));
 
-        new WallService()
-                .postPictureOnTheWall();
+        wallService.postPictureOnTheWall("Привет, Крош",
+                getResource(ResourceConstants.TEST_DATA.getResource(), "API_VERSION"));
 
         new FeedPage()
                 .goingToProfile();
