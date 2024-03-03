@@ -16,35 +16,36 @@ import static utils.ResourcesUtils.getResource;
 
 public class WallService {
 
-    private String BASE_URI = "API_HOST";
-    private String ownerId = "owner_id";
-    private String postId = "post_id";
-    private String OWNER_ID = "673888630";
-    private String accessToken = "access_token";
-    private String TOKEN = "TOKEN";
-    private String messageField = "message";
-    private String apiVersion = "v";
-    private String API_VERSION = "5.131";
-    private String servers = "server";
-    private String photos = "photo";
-    private String hash = "hash";
-    private String attachment = "attachment";
+    private static final String ATTACHMENT_PHOTO_TEMPLATE = "photo%s_%d";
+    private static final String BASE_URI = "API_HOST";
+    private static final String ownerIdField = "owner_id";
+    private static final String postIdField = "post_id";
+    private static final String accessTokenField = "access_token";
+    private static final String messageField = "message";
+    private static final String apiVersionField = "v";
+    private static final String serverField = "server";
+    private static final String photoField = "photo";
+    private static final String attachmentField = "attachment";
+    private static final String hashField = "hash";
+    private static final String TOKEN = "TOKEN";
 
-    File photo = new File(System.getProperty("user.dir") + "//src//main//resources//Крош.png");
-    Gson gson = new Gson();
+    // Отделить тестовые данные от логики
+    private String ownerId = "673888630";
+    private String apiVersion = "5.131";
+    private File photo = new File(System.getProperty("user.dir") + "//src//main//resources//Крош.png");
+    private Gson gson = new Gson();
 
-    public WallService postMessageOnTheWall(String messageValue, String apiVers) {
+    public WallService postMessageOnTheWall(String message, String apiVers) {
         given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.POST.getMethod())
-                .queryParam(ownerId, OWNER_ID)
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(messageField, messageValue)
-                .queryParam(apiVersion, apiVers)
+                .queryParam(ownerIdField, ownerId)
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(messageField, message)
+                .queryParam(apiVersionField, apiVers)
                 .contentType(ContentType.JSON)
                 .when().post()
-                .then().statusCode(SC_OK)
-                .extract().body().jsonPath();
+                .then().statusCode(SC_OK);
         return new WallService();
     }
 
@@ -52,9 +53,9 @@ public class WallService {
         List<String> postsText = given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.WALL_GET.getMethod())
-                .queryParam(ownerId, OWNER_ID)
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(apiVersion, API_VERSION)
+                .queryParam(ownerIdField, ownerId)
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(apiVersionField, apiVersion)
                 .contentType(ContentType.JSON)
                 .when().get()
                 .then().statusCode(SC_OK)
@@ -66,9 +67,9 @@ public class WallService {
         List<Integer> postsID = given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.WALL_GET.getMethod())
-                .queryParam(ownerId, OWNER_ID)
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(apiVersion, API_VERSION)
+                .queryParam(ownerIdField, ownerId)
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(apiVersionField, apiVersion)
                 .contentType(ContentType.JSON)
                 .when().get()
                 .then().statusCode(SC_OK)
@@ -76,13 +77,13 @@ public class WallService {
         return postsID;
     }
 
-    public WallService getIDandDeleted() {
-        List<Integer> ids = given()
+    public WallService getIdAndDelete() {
+        List<Integer> idList = given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.WALL_GET.getMethod())
-                .queryParam(ownerId, OWNER_ID)
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(apiVersion, API_VERSION)
+                .queryParam(ownerIdField, ownerId)
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(apiVersionField, apiVersion)
                 .contentType(ContentType.JSON)
                 .when().get()
                 .then().statusCode(SC_OK)
@@ -91,24 +92,23 @@ public class WallService {
         given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.DELETE.getMethod())
-                .queryParam(ownerId, OWNER_ID)
-                .queryParam(postId, ids.get(0))
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(apiVersion, API_VERSION)
+                .queryParam(ownerIdField, ownerId)
+                .queryParam(postIdField, idList.get(0))
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(apiVersionField, apiVersion)
                 .contentType(ContentType.JSON)
                 .when().get()
-                .then().statusCode(SC_OK)
-                .extract().jsonPath();
+                .then().statusCode(SC_OK);
         return new WallService();
     }
 
-    public void postPictureOnTheWall(String messageValue, String apiVers) {
+    public void postPictureOnTheWall(String message, String ownerId, String apiVers) {
         Album album = given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.GET_WALL_UPLOAD_SERVER.getMethod())
-                .queryParam(ownerId, OWNER_ID)
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(apiVersion, apiVers)
+                .queryParam(ownerIdField, ownerId)
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(apiVersionField, apiVers)
                 .contentType(ContentType.JSON)
                 .when().get()
                 .then().statusCode(SC_OK)
@@ -125,11 +125,11 @@ public class WallService {
         String photoId = given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.SAVE_WALL_PHOTO.getMethod())
-                .queryParam(servers, server.getServer())
-                .queryParam(photos, server.getPhoto())
-                .queryParam(hash, server.getHash())
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(apiVersion, apiVers)
+                .queryParam(serverField, server.getServer())
+                .queryParam(photoField, server.getPhoto())
+                .queryParam(hashField, server.getHash())
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(apiVersionField, apiVers)
                 .when().post()
                 .then()
                 .extract().asString();
@@ -139,11 +139,12 @@ public class WallService {
         postPhoto = given()
                 .baseUri(getResource(ResourceConstants.CONFIG.getResource(), BASE_URI))
                 .basePath(ApiConstants.POST.getMethod())
-                .queryParam(ownerId, OWNER_ID)
-                .queryParam(accessToken, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
-                .queryParam(messageField, messageValue)
-                .queryParam(attachment, String.format("photo%s_%d", "673888630", savedPhoto.getResponse().get(0).getId()))
-                .queryParam(apiVersion, apiVers)
+                .queryParam(ownerIdField, ownerId)
+                .queryParam(accessTokenField, getResource(ResourceConstants.CONFIG.getResource(), TOKEN))
+                .queryParam(messageField, message)
+                .queryParam(attachmentField,
+                        String.format(ATTACHMENT_PHOTO_TEMPLATE, ownerId, savedPhoto.getResponse().get(0).getId()))
+                .queryParam(apiVersionField, apiVers)
                 .contentType(ContentType.JSON)
                 .when().get()
                 .then().statusCode(SC_OK)

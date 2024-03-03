@@ -7,7 +7,6 @@ public enum ApiConstants {
     WALL_GET("wall.get?"),
     SAVE_WALL_PHOTO("photos.saveWallPhoto?");
 
-
     private String method;
 
     ApiConstants(String method) {
